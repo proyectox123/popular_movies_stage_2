@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.android.popularmoviesstate1.R;
-import com.example.android.popularmoviesstate1.data.remote.models.Movie;
+import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -41,7 +40,7 @@ public class MovieDetailInteractor implements MovieDetailNavigator.Interactor {
             return;
         }
 
-        Movie movie = intent.getParcelableExtra(EXTRA_MOVIE);
+        MovieEntity movie = intent.getParcelableExtra(EXTRA_MOVIE);
         if (movie == null) {
             interactorOutput.closeOnError();
             return;
@@ -54,7 +53,7 @@ public class MovieDetailInteractor implements MovieDetailNavigator.Interactor {
 
     //region Private Methods
 
-    private void validateMovieDetailData(Movie movie){
+    private void validateMovieDetailData(MovieEntity movie){
         interactorOutput.loadMovieDetailPoster(movie.getPosterPath());
         interactorOutput.loadMovieDetailTitle(movie.getTitle());
         interactorOutput.loadMovieDetailReleaseDate(getReleaseDate(movie.getReleaseDate()));
@@ -62,17 +61,9 @@ public class MovieDetailInteractor implements MovieDetailNavigator.Interactor {
         interactorOutput.loadMovieDetailDescription(movie.getPlotSynopsis());
     }
 
-    private String getReleaseDate(String releaseDate){
-        SimpleDateFormat inFormatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        try {
-            Date date = inFormatDate.parse(releaseDate);
-            SimpleDateFormat outFormatDate = new SimpleDateFormat("yyyy", Locale.US);
-            return outFormatDate.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return releaseDate;
+    private String getReleaseDate(Date releaseDate){
+        SimpleDateFormat outFormatDate = new SimpleDateFormat("yyyy", Locale.US);
+        return outFormatDate.format(releaseDate);
     }
 
     private String getVoteAverageLabel(double voteAverage){

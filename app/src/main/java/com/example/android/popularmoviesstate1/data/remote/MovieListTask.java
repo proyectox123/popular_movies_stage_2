@@ -2,6 +2,9 @@ package com.example.android.popularmoviesstate1.data.remote;
 
 import android.os.AsyncTask;
 
+import com.example.android.popularmoviesstate1.data.local.database.AppDatabase;
+import com.example.android.popularmoviesstate1.data.local.database.converters.DateConverter;
+import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.models.Movie;
 import com.example.android.popularmoviesstate1.data.remote.parser.MovieListJsonUtils;
 import com.example.android.popularmoviesstate1.data.remote.requests.MoviePopularRequest;
@@ -9,11 +12,14 @@ import com.example.android.popularmoviesstate1.data.remote.requests.MovieTopRate
 import com.example.android.popularmoviesstate1.enums.MovieEnum;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MovieListTask extends AsyncTask<MovieEnum, Void, List<Movie>> {
+public class MovieListTask extends AsyncTask<MovieEnum, Void, Boolean> {
 
     //region Fields
+
+    private final AppDatabase database;
 
     private final OnMovieListTaskListener onMovieListTaskListener;
 
@@ -21,7 +27,8 @@ public class MovieListTask extends AsyncTask<MovieEnum, Void, List<Movie>> {
 
     //region Constructors
 
-    public MovieListTask(OnMovieListTaskListener onMovieListTaskListener){
+    public MovieListTask(AppDatabase database, OnMovieListTaskListener onMovieListTaskListener){
+        this.database = database;
         this.onMovieListTaskListener = onMovieListTaskListener;
     }
 
@@ -30,12 +37,35 @@ public class MovieListTask extends AsyncTask<MovieEnum, Void, List<Movie>> {
     //region Override Methods & Callbacks
 
     @Override
-    protected List<Movie> doInBackground(MovieEnum... params) {
-        if (params.length == 0) {
-            return null;
+    protected Boolean doInBackground(MovieEnum... params) {
+        if (params.length > 0) {
+            List<Movie> movieList = getMovieList(params[0]);
+            if (movieList != null && movieList.size() > 0) {
+                List<MovieEntity> movieEntityList = translateMovieList(movieList);
+                database.movieDao().insertAllMovies(movieEntityList);
+                return true;
+            }
         }
 
-        switch (params[0]){
+        return false;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean wasSuccessful) {
+        super.onPostExecute(wasSuccessful);
+        if(wasSuccessful){
+            return;
+        }
+
+        onMovieListTaskListener.showErrorTask();
+    }
+
+    //endregion
+
+    //region Private Methods
+
+    private List<Movie> getMovieList(MovieEnum movieType){
+        switch (movieType){
             case POPULAR:
                 return getMoviePopularList();
             case TOP_RATED:
@@ -44,20 +74,6 @@ public class MovieListTask extends AsyncTask<MovieEnum, Void, List<Movie>> {
                 return null;
         }
     }
-
-    @Override
-    protected void onPostExecute(List<Movie> movieList) {
-        super.onPostExecute(movieList);
-        if(movieList != null && movieList.size() > 0){
-            onMovieListTaskListener.updateMovieList(movieList);
-        }else{
-            onMovieListTaskListener.showErrorTask();
-        }
-    }
-
-    //endregion
-
-    //region Private Methods
 
     private List<Movie> getMoviePopularList(){
         MoviePopularRequest moviePopular = new MoviePopularRequest();
@@ -87,12 +103,32 @@ public class MovieListTask extends AsyncTask<MovieEnum, Void, List<Movie>> {
         return null;
     }
 
+    private List<MovieEntity> translateMovieList(List<Movie> movieList){
+        List<MovieEntity> movieEntityList = new ArrayList<>();
+        for(Movie movie : movieList){
+            movieEntityList.add(translateMovie(movie));
+        }
+
+        return movieEntityList;
+    }
+
+    private MovieEntity translateMovie(Movie movie){
+        return new MovieEntity(
+                movie.getId(),
+                movie.getTitle(),
+                DateConverter.toDate(movie.getReleaseDate()),
+                movie.getPosterPath(),
+                movie.getVoteAverage(),
+                movie.getPlotSynopsis()
+        );
+    }
+
     //endregion
 
     //region Inner Classes & Interfaces
 
     public interface OnMovieListTaskListener {
-        void updateMovieList(List<Movie> movieList);
+        //void updateMovieList(List<Movie> movieList);
         void showErrorTask();
     }
 

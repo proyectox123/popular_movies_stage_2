@@ -1,11 +1,15 @@
 package com.example.android.popularmoviesstate1.features.main;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.popularmoviesstate1.R;
-import com.example.android.popularmoviesstate1.data.remote.models.Movie;
+import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.enums.MovieEnum;
 import com.example.android.popularmoviesstate1.features.movie.MovieListAdapter;
 import com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity;
@@ -23,12 +27,13 @@ import java.util.List;
 
 import static com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity.EXTRA_MOVIE;
 
-public class MainActivity extends AppCompatActivity implements MainNavigator.View,
+public class MainActivity extends AppCompatActivity implements MainNavigator,
         MovieListAdapter.OnMovieListAdapterListener{
 
     //region Constants
 
-    private final static int MOVIE_GRID_SPAN_COUNT = 2;
+    private final static String TAG = MainActivity.class.getSimpleName();
+    private final static int MOVIE_GRID_SPAN_VERTICAL_COUNT = 2;
 
     //endregion
 
@@ -41,9 +46,9 @@ public class MainActivity extends AppCompatActivity implements MainNavigator.Vie
     private SwipeRefreshLayout movieListSwipeRefresh;
     private TextView noDataLabel;
 
-    private MainNavigator.Presenter presenter;
-
     private MovieListAdapter movieListAdapter;
+
+    private MainViewModel mainViewModel;
 
     //endregion
 
@@ -61,14 +66,15 @@ public class MainActivity extends AppCompatActivity implements MainNavigator.Vie
 
         movieListAdapter = new MovieListAdapter(this);
 
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, MOVIE_GRID_SPAN_VERTICAL_COUNT);
         movieListView.setHasFixedSize(true);
-        movieListView.setLayoutManager(new GridLayoutManager(this, MOVIE_GRID_SPAN_COUNT));
+        movieListView.setLayoutManager(gridLayoutManager);
         movieListView.setAdapter(movieListAdapter);
 
         movieListSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.initMovieList(movieEnum);
+                mainViewModel.initMovieList(movieEnum);
             }
         });
 
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MainNavigator.Vie
     }
 
     @Override
-    public void onClickedMovieItem(Movie movie) {
+    public void onClickedMovieItem(MovieEntity movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
         intent.putExtra(EXTRA_MOVIE, movie);
         startActivity(intent);
@@ -110,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements MainNavigator.Vie
 
     @Override
     public void showErrorMessage() {
+        hideProgressBar();
+
         movieListSwipeRefresh.setRefreshing(false);
         movieListView.setVisibility(View.GONE);
         noDataLabel.setVisibility(View.VISIBLE);
@@ -122,28 +130,45 @@ public class MainActivity extends AppCompatActivity implements MainNavigator.Vie
         noDataLabel.setVisibility(View.GONE);
     }
 
-    @Override
-    public void updateMovieList(List<Movie> movieList) {
-        movieListSwipeRefresh.setRefreshing(false);
-        movieListView.setVisibility(View.VISIBLE);
-        movieListAdapter.setMovieList(movieList);
-    }
+    //endregion
 
     //region Private Methods
 
     private void initData(){
-        presenter = new MainPresenter(this);
-        presenter.initMovieList(movieEnum);
+        initViewModel();
+
+        mainViewModel.initMovieList(movieEnum);
+    }
+
+    private void initViewModel(){
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mainViewModel.setNavigator(this);
+
+        mainViewModel.getMovieList().observe(this, new Observer<List<MovieEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieEntity> movieList) {
+                updateMovieList(movieList);
+            }
+        });
     }
 
     private void selectMovieMostPopularOption(){
         movieEnum = MovieEnum.POPULAR;
-        presenter.initMovieList(movieEnum);
+        //presenter.initMovieList(movieEnum);
     }
 
     private void selectMovieHighestRatedOption(){
         movieEnum = MovieEnum.TOP_RATED;
-        presenter.initMovieList(movieEnum);
+        //presenter.initMovieList(movieEnum);
+    }
+
+    private void updateMovieList(@Nullable List<MovieEntity> movieList) {
+        Log.d(TAG, "updateMovieList");
+        hideProgressBar();
+
+        movieListSwipeRefresh.setRefreshing(false);
+        movieListView.setVisibility(View.VISIBLE);
+        movieListAdapter.setMovieList(movieList);
     }
 
     //endregion

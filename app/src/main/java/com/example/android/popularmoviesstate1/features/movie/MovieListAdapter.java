@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android.popularmoviesstate1.R;
-import com.example.android.popularmoviesstate1.data.remote.models.Movie;
+import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     //region Fields
 
-    private List<Movie> movieList;
+    private List<MovieEntity> movieList;
 
     private final OnMovieListAdapterListener onMovieListAdapterListener;
 
@@ -43,7 +43,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     @Override
     public void onBindViewHolder(@NonNull MovieListViewHolder movieListViewHolder, int position) {
-        final Movie movie = movieList.get(position);
+        final MovieEntity movie = movieList.get(position);
         movieListViewHolder.bind(movie);
     }
 
@@ -56,7 +56,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     //region Public Methods
 
-    public void setMovieList(List<Movie> movieList){
+    public void setMovieList(List<MovieEntity> movieList){
         this.movieList = movieList;
         notifyDataSetChanged();
     }
@@ -88,7 +88,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         private final ImageView moviePosterImageView;
 
-        private Movie movie;
+        private MovieEntity movie;
 
         //endregion
 
@@ -116,7 +116,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         //Public Methods
 
-        void bind(Movie movie){
+        void bind(MovieEntity movie){
             this.movie = movie;
 
             initMoviePoster(movie.getPosterPath());
@@ -138,7 +138,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     }
 
     public interface OnMovieListAdapterListener {
-        void onClickedMovieItem(Movie movie);
+        void onClickedMovieItem(MovieEntity movie);
     }
 
     //endregion
