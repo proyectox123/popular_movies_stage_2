@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.example.android.popularmoviesstate1.R;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
-import com.example.android.popularmoviesstate1.enums.MovieEnum;
 import com.example.android.popularmoviesstate1.features.movie.MovieListAdapter;
 import com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity;
 
@@ -38,8 +37,6 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
     //endregion
 
     //region Fields
-
-    private MovieEnum movieEnum = MovieEnum.TOP_RATED;
 
     private ProgressBar movieListProgressBar;
     private RecyclerView movieListView;
@@ -74,11 +71,17 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
         movieListSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mainViewModel.initMovieList(movieEnum);
+                mainViewModel.initMovieList();
             }
         });
 
-        initData();
+        initData(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mainViewModel.saveInstanceState(outState);
     }
 
     @Override
@@ -92,10 +95,10 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_movie_most_popular:
-                selectMovieMostPopularOption();
+                mainViewModel.selectMovieMostPopularOption();
                 return true;
             case R.id.menu_movie_highest_rated:
-                selectMovieHighestRatedOption();
+                mainViewModel.selectMovieHighestRatedOption();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -134,10 +137,10 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
 
     //region Private Methods
 
-    private void initData(){
+    private void initData(Bundle savedInstanceState){
         initViewModel();
 
-        mainViewModel.initMovieList(movieEnum);
+        mainViewModel.validateInstanceState(savedInstanceState);
     }
 
     private void initViewModel(){
@@ -150,16 +153,6 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
                 updateMovieList(movieList);
             }
         });
-    }
-
-    private void selectMovieMostPopularOption(){
-        movieEnum = MovieEnum.POPULAR;
-        //presenter.initMovieList(movieEnum);
-    }
-
-    private void selectMovieHighestRatedOption(){
-        movieEnum = MovieEnum.TOP_RATED;
-        //presenter.initMovieList(movieEnum);
     }
 
     private void updateMovieList(@Nullable List<MovieEntity> movieList) {
