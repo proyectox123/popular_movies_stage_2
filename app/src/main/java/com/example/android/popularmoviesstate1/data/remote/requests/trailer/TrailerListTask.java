@@ -51,7 +51,7 @@ public class TrailerListTask extends AsyncTask<Integer, Void, List<Trailer>> {
             return;
         }
 
-        onTrailerListTaskListener.showErrorTask();
+        //onTrailerListTaskListener.showErrorTask();
     }
 
     //endregion
@@ -60,7 +60,6 @@ public class TrailerListTask extends AsyncTask<Integer, Void, List<Trailer>> {
 
     public interface OnTrailerListTaskListener {
         void updateTrailerList(List<Trailer> movieList);
-        void showErrorTask();
     }
 
     //endregion

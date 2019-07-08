@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.android.popularmoviesstate1.R;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
-import com.example.android.popularmoviesstate1.features.movie.MovieListAdapter;
+import com.example.android.popularmoviesstate1.adapters.movie.MovieListAdapter;
 import com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity;
 
 import java.util.List;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
 
         movieListSwipeRefresh.setRefreshing(false);
         movieListView.setVisibility(View.VISIBLE);
-        movieListAdapter.setMovieList(movieList);
+        movieListAdapter.setList(movieList);
     }
 
     //endregion

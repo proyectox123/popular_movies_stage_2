@@ -28,6 +28,7 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
     private MovieDetailNavigator navigator;
 
     private MutableLiveData<MovieEntity> movieData = new MutableLiveData<>();
+    private MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
 
     //endregion
 
@@ -46,20 +47,18 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
 
     }
 
-    @Override
-    public void showErrorTask() {
-
-    }
-
     //endregion
 
     //region Private Methods
 
     //region LiveData Private Getters
 
-
-    public MutableLiveData<MovieEntity> getMovieData() {
+    MutableLiveData<MovieEntity> getMovieData() {
         return movieData;
+    }
+
+    MutableLiveData<List<Trailer>> getTrailerListData() {
+        return trailerListData;
     }
 
     //endregion
