@@ -1,17 +1,15 @@
-package com.example.android.popularmoviesstate1.data.remote.requests;
+package com.example.android.popularmoviesstate1.data.remote.requests.movie;
 
 import android.net.Uri;
 
 import com.example.android.popularmoviesstate1.BuildConfig;
+import com.example.android.popularmoviesstate1.data.remote.requests.BaseMovieRequest;
 
 public class MoviePopularRequest extends BaseMovieRequest {
 
     //region Constants
 
-    private final static String BASE_MOVIE_DB_URL = "https://api.themoviedb.org/3/";
     private final static String MOVIE_POPULAR_URL = BASE_MOVIE_DB_URL + "movie/popular";
-
-    private final static String QUERY_PARAMETER_API_KEY = "api_key";
 
     //endregion
 

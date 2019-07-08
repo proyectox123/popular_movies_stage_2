@@ -13,14 +13,20 @@ public final class MovieListJsonUtils {
 
     private final static String URL_IMAGE_TBMD = "http://image.tmdb.org/t/p/w185/";
 
-    public static List<Movie> getMovieListFromJson(String movieListJsonStr)
-            throws JSONException {
+    private final static String JSON_ARRAY_RESULTS = "results";
+    private final static String JSON_OBJECT_ID = "id";
+    private final static String JSON_OBJECT_TITLE = "title";
+    private final static String JSON_OBJECT_RELEASE_DATE = "release_date";
+    private final static String JSON_OBJECT_POSTER_PATH = "poster_path";
+    private final static String JSON_OBJECT_VOTE_AVERAGE = "vote_average";
+    private final static String JSON_OBJECT_OVERVIEW = "overview";
 
-        JSONObject movieListJson = new JSONObject(movieListJsonStr);
-        JSONArray resultJsonArray = movieListJson.getJSONArray("results");
+    public static List<Movie> getMovieListFromJson(String listJsonStr)
+            throws JSONException {
+        JSONObject listJson = new JSONObject(listJsonStr);
+        JSONArray resultJsonArray = listJson.getJSONArray(JSON_ARRAY_RESULTS);
 
         List<Movie> movieList = new ArrayList<>();
-
         for(int i=0; i<resultJsonArray.length(); i++){
             JSONObject movieFromJsonObject = resultJsonArray.getJSONObject(i);
             movieList.add(getMovieFromJsonObject(movieFromJsonObject));
@@ -29,13 +35,13 @@ public final class MovieListJsonUtils {
         return movieList;
     }
 
-    private static Movie getMovieFromJsonObject(JSONObject movieJsonObject) throws JSONException{
-        int id = movieJsonObject.getInt("id");
-        String title = movieJsonObject.getString("title");
-        String releaseDate = movieJsonObject.getString("release_date");
-        String posterPath = URL_IMAGE_TBMD + movieJsonObject.getString("poster_path");
-        double voteAverage = movieJsonObject.getDouble("vote_average");
-        String plotSynopsis = movieJsonObject.getString("overview");
+    private static Movie getMovieFromJsonObject(JSONObject jsonObject) throws JSONException{
+        int id = jsonObject.getInt(JSON_OBJECT_ID);
+        String title = jsonObject.getString(JSON_OBJECT_TITLE);
+        String releaseDate = jsonObject.getString(JSON_OBJECT_RELEASE_DATE);
+        String posterPath = URL_IMAGE_TBMD + jsonObject.getString(JSON_OBJECT_POSTER_PATH);
+        double voteAverage = jsonObject.getDouble(JSON_OBJECT_VOTE_AVERAGE);
+        String plotSynopsis = jsonObject.getString(JSON_OBJECT_OVERVIEW);
 
         return new Movie(id, title, releaseDate, posterPath, voteAverage, plotSynopsis);
     }

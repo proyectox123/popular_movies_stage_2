@@ -14,6 +14,9 @@ public abstract class BaseMovieRequest {
 
     private final static String TAG = BaseMovieRequest.class.getSimpleName();
 
+    protected final static String BASE_MOVIE_DB_URL = "https://api.themoviedb.org/3/";
+    protected final static String QUERY_PARAMETER_API_KEY = "api_key";
+
     protected abstract Uri createBuiltUri();
 
     public URL buildUrl() {

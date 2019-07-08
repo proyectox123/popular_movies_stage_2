@@ -5,14 +5,18 @@ import android.content.Intent;
 
 import com.example.android.popularmoviesstate1.R;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
+import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
+import com.example.android.popularmoviesstate1.data.remote.requests.trailer.TrailerListTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity.EXTRA_MOVIE;
 
-public class MovieDetailInteractor implements MovieDetailNavigator.Interactor {
+public class MovieDetailInteractor implements MovieDetailNavigator.Interactor,
+        TrailerListTask.OnTrailerListTaskListener{
 
     //region Fields
 
@@ -28,6 +32,20 @@ public class MovieDetailInteractor implements MovieDetailNavigator.Interactor {
                                  MovieDetailNavigator.InteractorOutput interactorOutput){
         this.context = context;
         this.interactorOutput = interactorOutput;
+    }
+
+    //endregion
+
+    //region Override Methods & Callbacks
+
+    @Override
+    public void updateTrailerList(List<Trailer> movieList) {
+
+    }
+
+    @Override
+    public void showErrorTask() {
+
     }
 
     //endregion
@@ -59,6 +77,8 @@ public class MovieDetailInteractor implements MovieDetailNavigator.Interactor {
         interactorOutput.loadMovieDetailReleaseDate(getReleaseDate(movie.getReleaseDate()));
         interactorOutput.loadMovieDetailVoteAverage(getVoteAverageLabel(movie.getVoteAverage()));
         interactorOutput.loadMovieDetailDescription(movie.getPlotSynopsis());
+
+        new TrailerListTask(this).execute(movie.getId());
     }
 
     private String getReleaseDate(Date releaseDate){

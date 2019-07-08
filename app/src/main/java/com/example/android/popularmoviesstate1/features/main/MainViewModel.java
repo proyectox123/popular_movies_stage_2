@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
-import com.example.android.popularmoviesstate1.data.remote.MovieListTask;
+import com.example.android.popularmoviesstate1.data.remote.requests.movie.MovieListTask;
 import com.example.android.popularmoviesstate1.enums.MovieEnum;
 
 import java.util.ArrayList;

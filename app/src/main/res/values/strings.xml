@@ -19,4 +19,6 @@
     <!-- Menu labels -->
     <string name="menu_movie_highest_rated">Highest Rated</string>
     <string name="menu_movie_most_popular">Most Popular</string>
+    <string name="menu_movie_favorites">Favorites</string>
+    <string name="menu_movie_sort_by">Sort by</string>
 </resources>

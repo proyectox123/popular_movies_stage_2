@@ -1,12 +1,10 @@
-package com.example.android.popularmoviesstate1.data.remote;
+package com.example.android.popularmoviesstate1.data.remote.requests.movie;
 
 import android.os.AsyncTask;
 
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.models.Movie;
 import com.example.android.popularmoviesstate1.data.remote.parser.MovieListJsonUtils;
-import com.example.android.popularmoviesstate1.data.remote.requests.MoviePopularRequest;
-import com.example.android.popularmoviesstate1.data.remote.requests.MovieTopRatedRequest;
 import com.example.android.popularmoviesstate1.data.translators.MovieTranslator;
 import com.example.android.popularmoviesstate1.enums.MovieEnum;
 
