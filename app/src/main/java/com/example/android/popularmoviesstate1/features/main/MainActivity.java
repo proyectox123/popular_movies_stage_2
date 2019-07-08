@@ -157,11 +157,15 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
 
     private void updateMovieList(@Nullable List<MovieEntity> movieList) {
         Log.d(TAG, "updateMovieList");
-        hideProgressBar();
+        if (movieList != null && movieList.size() > 0) {
+            hideProgressBar();
 
-        movieListSwipeRefresh.setRefreshing(false);
-        movieListView.setVisibility(View.VISIBLE);
-        movieListAdapter.setList(movieList);
+            movieListSwipeRefresh.setRefreshing(false);
+            movieListView.setVisibility(View.VISIBLE);
+            movieListAdapter.setList(movieList);
+        } else {
+            showErrorMessage();
+        }
     }
 
     //endregion

@@ -2,6 +2,8 @@ package com.example.android.popularmoviesstate1.features.moviedetail;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,16 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popularmoviesstate1.R;
+import com.example.android.popularmoviesstate1.adapters.trailer.TrailerListAdapter;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
-import com.example.android.popularmoviesstate1.features.trailer.TrailerListAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailNavigator {
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailNavigator,
+        TrailerListAdapter.OnTrailerListAdapterListener {
 
     //region Constants
 
@@ -35,11 +38,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     //region Fields
 
     private ImageView movieDetailPosterImageView;
-    private RecyclerView trailerListView;
     private TextView movieDetailTitleTextView;
     private TextView movieDetailReleaseDateTextView;
     private TextView movieDetailVoteAverageTextView;
     private TextView movieDetailDescriptionTextView;
+    private View trailerSectionContainer;
 
     private TrailerListAdapter trailerListAdapter;
 
@@ -59,12 +62,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         movieDetailReleaseDateTextView = findViewById(R.id.movieDetailReleaseDateTextView);
         movieDetailVoteAverageTextView = findViewById(R.id.movieDetailVoteAverageTextView);
         movieDetailDescriptionTextView = findViewById(R.id.movieDetailDescriptionTextView);
-        trailerListView = findViewById(R.id.trailerListView);
+        trailerSectionContainer = findViewById(R.id.trailerSectionContainer);
+
+        trailerListAdapter = new TrailerListAdapter(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, HORIZONTAL, false);
+        RecyclerView trailerListView = findViewById(R.id.trailerListView);
         trailerListView.setHasFixedSize(true);
         trailerListView.setLayoutManager(linearLayoutManager);
-        //trailerListView.setAdapter(trailerListAdapter);
+        trailerListView.setAdapter(trailerListAdapter);
 
         initData();
     }
@@ -83,6 +89,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void closeOnError() {
         finish();
         Toast.makeText(this, R.string.error_movie_detail, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClickedTrailerItem(Trailer trailer) {
+        String url = trailer.getVideoPath();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
     //endregion
@@ -152,8 +166,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private void updateTrailerList(@Nullable List<Trailer> trailerList) {
         Log.d(TAG, "updateTrailerList");
-        trailerListView.setVisibility(View.VISIBLE);
-        //trailerListAdapter.setTrailerList(trailerList);
+        if(trailerList != null && trailerList.size() > 0){
+            trailerSectionContainer.setVisibility(View.VISIBLE);
+            trailerListAdapter.setList(trailerList);
+        }else{
+            trailerSectionContainer.setVisibility(View.GONE);
+            trailerListAdapter.clearList(trailerList);
+        }
     }
 
     //endregion

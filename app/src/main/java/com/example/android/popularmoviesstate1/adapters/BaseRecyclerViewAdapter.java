@@ -7,14 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseRecyclerViewAdapter<T, VH extends RecyclerView.ViewHolder>
+public abstract class BaseRecyclerViewAdapter<T, VH extends BaseViewHolder<T>>
         extends RecyclerView.Adapter<VH>{
 
     //region Fields
 
-    private List<T> itemList;
+    private List<T> itemList = new ArrayList<>();
 
     //endregion
 
@@ -43,6 +44,16 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends RecyclerView.ViewHol
 
     public void setList(List<T> itemList){
         this.itemList = itemList;
+        notifyDataSetChanged();
+    }
+
+    public void clearList(List<T> itemList){
+        if(itemList == null){
+            this.itemList = new ArrayList<>();
+        }else{
+            this.itemList.clear();
+        }
+
         notifyDataSetChanged();
     }
 

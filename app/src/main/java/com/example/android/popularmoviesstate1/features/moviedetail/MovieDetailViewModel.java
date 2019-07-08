@@ -11,6 +11,7 @@ import com.example.android.popularmoviesstate1.data.local.database.tables.MovieE
 import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
 import com.example.android.popularmoviesstate1.data.remote.requests.trailer.TrailerListTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.android.popularmoviesstate1.utils.Constants.EXTRA_MOVIE;
@@ -44,7 +45,12 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
 
     @Override
     public void updateTrailerList(List<Trailer> movieList) {
+        trailerListData.setValue(movieList);
+    }
 
+    @Override
+    public void showTrailerListError() {
+        trailerListData.setValue(new ArrayList<Trailer>());
     }
 
     //endregion

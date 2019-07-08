@@ -11,6 +11,8 @@
     <!-- Descriptions -->
     <string name="content_description_movie_poster_item">Movie poster item</string>
     <string name="content_description_movie_detail_poster_item">Movie detail poster item</string>
+    <string name="content_description_trailer_thumbnail">Trailer thumbnail</string>
+    <string name="content_description_trailer_play_button">Trailer play button</string>
 
     <!-- Message Errors -->
     <string name="label_no_available_data">No available data for the moment.</string>
@@ -21,4 +23,7 @@
     <string name="menu_movie_most_popular">Most Popular</string>
     <string name="menu_movie_favorites">Favorites</string>
     <string name="menu_movie_sort_by">Sort by</string>
+
+    <!-- Sections -->
+    <string name="section_trailers">Trailers</string>
 </resources>

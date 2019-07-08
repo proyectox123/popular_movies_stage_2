@@ -8,7 +8,7 @@ import com.example.android.popularmoviesstate1.R;
 import com.example.android.popularmoviesstate1.adapters.BaseRecyclerViewAdapter;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 
-public class MovieListAdapter extends BaseRecyclerViewAdapter<MovieEntity, MovieListViewHolder> {
+public class MovieListAdapter extends BaseRecyclerViewAdapter<MovieEntity, MovieViewHolder> {
 
     //region Fields
 
@@ -28,12 +28,12 @@ public class MovieListAdapter extends BaseRecyclerViewAdapter<MovieEntity, Movie
 
     @NonNull
     @Override
-    public MovieListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new MovieListViewHolder(createItemView(viewGroup), onMovieListAdapterListener);
+    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        return new MovieViewHolder(createItemView(viewGroup), onMovieListAdapterListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieListViewHolder movieListViewHolder, int position) {
+    public void onBindViewHolder(@NonNull MovieViewHolder movieListViewHolder, int position) {
         movieListViewHolder.bind(getItemByPosition(position));
     }
 

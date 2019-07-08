@@ -1,21 +1,19 @@
 package com.example.android.popularmoviesstate1.adapters.movie;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.example.android.popularmoviesstate1.R;
+import com.example.android.popularmoviesstate1.adapters.BaseViewHolder;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.squareup.picasso.Picasso;
 
-public class MovieListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class MovieViewHolder extends BaseViewHolder<MovieEntity> {
 
     //region Fields
 
     private final ImageView moviePosterImageView;
-
-    private MovieEntity movie;
 
     private MovieListAdapter.OnMovieListAdapterListener onMovieListAdapterListener;
 
@@ -23,12 +21,11 @@ public class MovieListViewHolder extends RecyclerView.ViewHolder implements View
 
     //region Constructors
 
-    MovieListViewHolder(@NonNull View itemView,
-                        MovieListAdapter.OnMovieListAdapterListener onMovieListAdapterListener) {
+    MovieViewHolder(@NonNull View itemView,
+                    MovieListAdapter.OnMovieListAdapterListener onMovieListAdapterListener) {
         super(itemView);
 
         moviePosterImageView = itemView.findViewById(R.id.moviePosterImageView);
-        moviePosterImageView.setOnClickListener(this);
 
         this.onMovieListAdapterListener = onMovieListAdapterListener;
     }
@@ -38,20 +35,15 @@ public class MovieListViewHolder extends RecyclerView.ViewHolder implements View
     //region Override Methods & Callbacks
 
     @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.moviePosterImageView) {
-            onMovieListAdapterListener.onClickedMovieItem(movie);
-        }
-    }
-
-    //endregion
-
-    //Public Methods
-
-    void bind(final MovieEntity movie){
-        this.movie = movie;
-
+    public void bind(final MovieEntity movie){
         initMoviePoster(movie.getPosterPath());
+
+        moviePosterImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMovieListAdapterListener.onClickedMovieItem(movie);
+            }
+        });
     }
 
     //endregion
