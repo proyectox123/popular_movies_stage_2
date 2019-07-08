@@ -1,22 +1,20 @@
 package com.example.android.popularmoviesstate1.features.moviedetail;
 
-import android.support.v7.app.AppCompatActivity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popularmoviesstate1.R;
+import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailNavigator.View {
-
-    //region Constants
-
-    public static final String EXTRA_MOVIE = "com.example.android.popularmoviesstate1.EXTRA_MOVIE";
-
-    //endregion
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailNavigator {
 
     //region Fields
 
@@ -25,6 +23,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private TextView movieDetailReleaseDateTextView;
     private TextView movieDetailVoteAverageTextView;
     private TextView movieDetailDescriptionTextView;
+
+    private MovieDetailViewModel movieDetailViewModel;
 
     //endregion
 
@@ -60,8 +60,37 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         Toast.makeText(this, R.string.error_movie_detail, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void loadMovieDetailPoster(String posterPath) {
+    //endregion
+
+    //region Private Methods
+
+    private void initData(){
+        initViewModel();
+
+        movieDetailViewModel.validateMovieDetailExtraData(getIntent());
+    }
+
+    private void initViewModel(){
+        movieDetailViewModel = ViewModelProviders.of(this).get(MovieDetailViewModel.class);
+        movieDetailViewModel.setNavigator(this);
+
+        movieDetailViewModel.getMovieData().observe(this, new Observer<MovieEntity>() {
+            @Override
+            public void onChanged(@Nullable MovieEntity movie) {
+                if(movie == null){
+                    return;
+                }
+
+                loadMovieDetailPoster(movie.getPosterPath());
+                loadMovieDetailTitle(movie.getTitle());
+                loadMovieDetailReleaseDate(movie.getReleaseDateLabel());
+                loadMovieDetailVoteAverage(movie.getVoteAverageLabel(getApplication()));
+                loadMovieDetailDescription(movie.getPlotSynopsis());
+            }
+        });
+    }
+
+    private void loadMovieDetailPoster(String posterPath) {
         Picasso.get()
                 .load(posterPath)
                 .placeholder(R.drawable.ic_movie_black_48dp)
@@ -69,33 +98,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 .into(movieDetailPosterImageView);
     }
 
-    @Override
-    public void loadMovieDetailTitle(String title) {
+    private void loadMovieDetailTitle(String title) {
         movieDetailTitleTextView.setText(title);
     }
 
-    @Override
-    public void loadMovieDetailReleaseDate(String releaseDate) {
+    private void loadMovieDetailReleaseDate(String releaseDate) {
         movieDetailReleaseDateTextView.setText(releaseDate);
     }
 
-    @Override
-    public void loadMovieDetailVoteAverage(String voteAverage) {
+    private void loadMovieDetailVoteAverage(String voteAverage) {
         movieDetailVoteAverageTextView.setText(voteAverage);
     }
 
-    @Override
-    public void loadMovieDetailDescription(String plotSynopsis) {
+    private void loadMovieDetailDescription(String plotSynopsis) {
         movieDetailDescriptionTextView.setText(plotSynopsis);
-    }
-
-    //endregion
-
-    //region Private Methods
-
-    private void initData(){
-        MovieDetailNavigator.Presenter presenter = new MovieDetailPresenter(this, this);
-        presenter.validateMovieDetailExtraData(getIntent());
     }
 
     //endregion

@@ -4,10 +4,17 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.android.popularmoviesstate1.R;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
+import static com.example.android.popularmoviesstate1.utils.Constants.SIMPLE_DATE_FORMAT;
 
 @Entity(tableName = "movie")
 public class MovieEntity implements Parcelable {
@@ -91,6 +98,11 @@ public class MovieEntity implements Parcelable {
         return releaseDate;
     }
 
+    public String getReleaseDateLabel(){
+        SimpleDateFormat outFormatDate = new SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.US);
+        return outFormatDate.format(releaseDate);
+    }
+
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
@@ -109,6 +121,11 @@ public class MovieEntity implements Parcelable {
 
     public void setVoteAverage(double voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    public String getVoteAverageLabel(Context context){
+        String voteAverageLabel = voteAverage + "/10";
+        return context.getString(R.string.text_movie_detail_vote_average, voteAverageLabel);
     }
 
     public String getPlotSynopsis() {

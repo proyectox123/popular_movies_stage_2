@@ -37,7 +37,7 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
     private List<MovieEntity> movieTopRatedList = new ArrayList<>();
     private List<MovieEntity> movieFavoriteList = new ArrayList<>();
 
-    private MutableLiveData<List<MovieEntity>> movieListData;
+    private MutableLiveData<List<MovieEntity>> movieListData = new MutableLiveData<>();
 
     private MainNavigator navigator;
 
@@ -47,8 +47,6 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-
-        movieListData = new MutableLiveData<>();
     }
 
     //endregion

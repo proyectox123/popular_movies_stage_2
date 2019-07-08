@@ -24,7 +24,7 @@ import com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailA
 
 import java.util.List;
 
-import static com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity.EXTRA_MOVIE;
+import static com.example.android.popularmoviesstate1.utils.Constants.EXTRA_MOVIE;
 
 public class MainActivity extends AppCompatActivity implements MainNavigator,
         MovieListAdapter.OnMovieListAdapterListener{
