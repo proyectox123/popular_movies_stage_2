@@ -92,6 +92,7 @@
             android:id="@+id/trailerSectionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -103,6 +104,26 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/trailerListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/reviewSectionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/MovieDetailTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/section_reviews"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviewListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

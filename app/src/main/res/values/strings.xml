@@ -26,4 +26,5 @@
 
     <!-- Sections -->
     <string name="section_trailers">Trailers</string>
+    <string name="section_reviews">Reviews</string>
 </resources>

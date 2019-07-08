@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
+import com.example.android.popularmoviesstate1.data.remote.models.Review;
 import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
+import com.example.android.popularmoviesstate1.data.remote.requests.review.ReviewListTask;
 import com.example.android.popularmoviesstate1.data.remote.requests.trailer.TrailerListTask;
 
 import java.util.ArrayList;
@@ -16,7 +18,9 @@ import java.util.List;
 
 import static com.example.android.popularmoviesstate1.utils.Constants.EXTRA_MOVIE;
 
-public class MovieDetailViewModel extends AndroidViewModel implements TrailerListTask.OnTrailerListTaskListener {
+public class MovieDetailViewModel extends AndroidViewModel implements
+        ReviewListTask.OnReviewListTaskListener,
+        TrailerListTask.OnTrailerListTaskListener {
 
     //region Constants
 
@@ -30,6 +34,7 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
 
     private MutableLiveData<MovieEntity> movieData = new MutableLiveData<>();
     private MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
+    private MutableLiveData<List<Review>> reviewListData = new MutableLiveData<>();
 
     //endregion
 
@@ -53,6 +58,16 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
         trailerListData.setValue(new ArrayList<Trailer>());
     }
 
+    @Override
+    public void updateReviewList(List<Review> reviewList) {
+        reviewListData.setValue(reviewList);
+    }
+
+    @Override
+    public void showReviewListError() {
+        reviewListData.setValue(new ArrayList<Review>());
+    }
+
     //endregion
 
     //region Private Methods
@@ -65,6 +80,10 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
 
     MutableLiveData<List<Trailer>> getTrailerListData() {
         return trailerListData;
+    }
+
+    MutableLiveData<List<Review>> getReviewListData() {
+        return reviewListData;
     }
 
     //endregion
@@ -96,6 +115,7 @@ public class MovieDetailViewModel extends AndroidViewModel implements TrailerLis
         movieData.setValue(movie);
 
         new TrailerListTask(this).execute(movie.getId());
+        new ReviewListTask(this).execute(movie.getId());
     }
 
     //endregion

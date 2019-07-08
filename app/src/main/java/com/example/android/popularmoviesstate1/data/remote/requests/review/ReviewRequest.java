@@ -1,16 +1,16 @@
-package com.example.android.popularmoviesstate1.data.remote.requests.trailer;
+package com.example.android.popularmoviesstate1.data.remote.requests.review;
 
 import android.net.Uri;
 
 import com.example.android.popularmoviesstate1.BuildConfig;
 import com.example.android.popularmoviesstate1.data.remote.requests.BaseMovieRequest;
 
-public class TrailerRequest extends BaseMovieRequest {
+public class ReviewRequest extends BaseMovieRequest {
 
     //region Constants
 
-    private final static String MOVIE_TRAILER_URL = BASE_MOVIE_DB_URL + "movie/";
-    private final static String MOVIE_TRAILER_VIDEO_PATH = "/videos";
+    private final static String MOVIE_REVIEW_URL = BASE_MOVIE_DB_URL + "movie/";
+    private final static String MOVIE_REVIEW_PATH = "/reviews";
 
     //endregion
 
@@ -22,7 +22,7 @@ public class TrailerRequest extends BaseMovieRequest {
 
     //region Constructors
 
-    public TrailerRequest(int movieId){
+    public ReviewRequest(int movieId){
         this.movieId = movieId;
     }
 
@@ -32,7 +32,7 @@ public class TrailerRequest extends BaseMovieRequest {
 
     @Override
     public Uri createBuiltUri() {
-        String movieTrailerUrl = MOVIE_TRAILER_URL + movieId + MOVIE_TRAILER_VIDEO_PATH;
+        String movieTrailerUrl = MOVIE_REVIEW_URL + movieId + MOVIE_REVIEW_PATH;
 
         return Uri.parse(movieTrailerUrl).buildUpon()
                 .appendQueryParameter(QUERY_PARAMETER_API_KEY, BuildConfig.MOVIE_DB_API_KEY)

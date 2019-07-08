@@ -17,8 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popularmoviesstate1.R;
+import com.example.android.popularmoviesstate1.adapters.review.ReviewListAdapter;
 import com.example.android.popularmoviesstate1.adapters.trailer.TrailerListAdapter;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
+import com.example.android.popularmoviesstate1.data.remote.models.Review;
 import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
 import com.squareup.picasso.Picasso;
 
@@ -27,7 +29,8 @@ import java.util.List;
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailNavigator,
-        TrailerListAdapter.OnTrailerListAdapterListener {
+        TrailerListAdapter.OnTrailerListAdapterListener,
+        ReviewListAdapter.OnReviewListAdapterListener{
 
     //region Constants
 
@@ -43,8 +46,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private TextView movieDetailVoteAverageTextView;
     private TextView movieDetailDescriptionTextView;
     private View trailerSectionContainer;
+    private View reviewSectionContainer;
 
     private TrailerListAdapter trailerListAdapter;
+    private ReviewListAdapter reviewListAdapter;
 
     private MovieDetailViewModel movieDetailViewModel;
 
@@ -63,14 +68,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         movieDetailVoteAverageTextView = findViewById(R.id.movieDetailVoteAverageTextView);
         movieDetailDescriptionTextView = findViewById(R.id.movieDetailDescriptionTextView);
         trailerSectionContainer = findViewById(R.id.trailerSectionContainer);
+        reviewSectionContainer = findViewById(R.id.reviewSectionContainer);
 
         trailerListAdapter = new TrailerListAdapter(this);
+        reviewListAdapter = new ReviewListAdapter(this);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, HORIZONTAL, false);
         RecyclerView trailerListView = findViewById(R.id.trailerListView);
         trailerListView.setHasFixedSize(true);
-        trailerListView.setLayoutManager(linearLayoutManager);
+        trailerListView.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL, false));
         trailerListView.setAdapter(trailerListAdapter);
+
+        RecyclerView reviewListView = findViewById(R.id.reviewListView);
+        reviewListView.setHasFixedSize(true);
+        reviewListView.setLayoutManager(new LinearLayoutManager(this));
+        reviewListView.setAdapter(reviewListAdapter);
 
         initData();
     }
@@ -94,6 +105,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void onClickedTrailerItem(Trailer trailer) {
         String url = trailer.getVideoPath();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    @Override
+    public void onClickedReviewItem(Review review) {
+        String url = review.getUrl();
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
@@ -123,6 +142,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             @Override
             public void onChanged(@Nullable List<Trailer> trailers) {
                 updateTrailerList(trailers);
+            }
+        });
+        movieDetailViewModel.getReviewListData().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(@Nullable List<Review> reviewList) {
+                updateReviewList(reviewList);
             }
         });
     }
@@ -172,6 +197,17 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }else{
             trailerSectionContainer.setVisibility(View.GONE);
             trailerListAdapter.clearList(trailerList);
+        }
+    }
+
+    private void updateReviewList(@Nullable List<Review> reviewList){
+        Log.d(TAG, "updateReviewList");
+        if(reviewList != null && reviewList.size() > 0){
+            reviewSectionContainer.setVisibility(View.VISIBLE);
+            reviewListAdapter.setList(reviewList);
+        }else{
+            reviewSectionContainer.setVisibility(View.GONE);
+            reviewListAdapter.clearList(reviewList);
         }
     }
 
