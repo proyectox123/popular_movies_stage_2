@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,6 +41,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     //endregion
 
     //region Fields
+
+    private boolean isFavoriteMovie = false;
+
+    private MenuItem favoriteMenuItem;
 
     private ImageView movieDetailPosterImageView;
     private TextView movieDetailTitleTextView;
@@ -87,9 +93,26 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.movie_detail, menu);
+
+        this.favoriteMenuItem = menu.findItem(R.id.action_favorite);
+        updateFavoriteMenuItem();
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+            return true;
+        }
+
+        if(item.getItemId() == R.id.action_favorite){
+            movieDetailViewModel.updateFavoriteMovieStatus();
             return true;
         }
 
@@ -161,6 +184,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 updateReviewList(reviewList);
             }
         });
+        movieDetailViewModel.getIsFavorite().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean isFavorite) {
+                Log.d(TAG, "getIsFavorite onChanged isFavorite " + isFavorite);
+                isFavoriteMovie = isFavorite != null ? isFavorite : false;
+                updateFavoriteMenuItem();
+            }
+        });
     }
 
     private void validateMovieDate(MovieEntity movie){
@@ -200,6 +231,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         movieDetailDescriptionTextView.setText(plotSynopsis);
     }
 
+    private void updateFavoriteMenuItem(){
+        if(favoriteMenuItem == null){
+            Log.d(TAG, "updateFavoriteMenuItem null");
+            return;
+        }
+
+        Log.d(TAG, "updateFavoriteMenuItem");
+        if(isFavoriteMovie){
+            favoriteMenuItem.setIcon(R.drawable.ic_favorite_full);
+        }else{
+            favoriteMenuItem.setIcon(R.drawable.ic_favorite_border);
+        }
+    }
+
     private void updateTrailerList(@Nullable List<Trailer> trailerList) {
         Log.d(TAG, "updateTrailerList");
         if(trailerList != null && trailerList.size() > 0){
@@ -207,7 +252,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             trailerListAdapter.setList(trailerList);
         }else{
             trailerSectionContainer.setVisibility(View.GONE);
-            trailerListAdapter.clearList(trailerList);
+            trailerListAdapter.clearList();
         }
     }
 
@@ -218,7 +263,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             reviewListAdapter.setList(reviewList);
         }else{
             reviewSectionContainer.setVisibility(View.GONE);
-            reviewListAdapter.clearList(reviewList);
+            reviewListAdapter.clearList();
         }
     }
 

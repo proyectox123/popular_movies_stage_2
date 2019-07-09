@@ -47,8 +47,8 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseViewHolder<T>>
         notifyDataSetChanged();
     }
 
-    public void clearList(List<T> itemList){
-        if(itemList == null){
+    public void clearList(){
+        if(this.itemList == null){
             this.itemList = new ArrayList<>();
         }else{
             this.itemList.clear();

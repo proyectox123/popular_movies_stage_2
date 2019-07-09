@@ -2,12 +2,14 @@ package com.example.android.popularmoviesstate1.features.moviedetail;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.android.popularmoviesstate1.data.local.database.repositories.MovieRepository;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.models.Review;
 import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
@@ -40,9 +42,13 @@ public class MovieDetailViewModel extends AndroidViewModel implements
     private List<Trailer> trailerList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
 
+    private LiveData<Boolean> isFavorite;
+
     private MutableLiveData<MovieEntity> movieData = new MutableLiveData<>();
     private MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
     private MutableLiveData<List<Review>> reviewListData = new MutableLiveData<>();
+
+    private MovieRepository movieRepository;
 
     //endregion
 
@@ -50,6 +56,10 @@ public class MovieDetailViewModel extends AndroidViewModel implements
 
     public MovieDetailViewModel(@NonNull Application application) {
         super(application);
+
+        movieRepository = new MovieRepository(application);
+
+        this.isFavorite = movieRepository.getIsFavorite();
     }
 
     //endregion
@@ -102,10 +112,18 @@ public class MovieDetailViewModel extends AndroidViewModel implements
         return reviewListData;
     }
 
+    LiveData<Boolean> getIsFavorite() {
+        return isFavorite;
+    }
+
     //endregion
 
     void setNavigator(MovieDetailNavigator navigator){
         this.navigator = navigator;
+    }
+
+    void updateFavoriteMovieStatus() {
+        movieRepository.updateFavoriteMovieStatus(movie);
     }
 
     void validateMovieDetailExtraData(Intent intent){
@@ -165,6 +183,8 @@ public class MovieDetailViewModel extends AndroidViewModel implements
 
         validateTrailerList(movie);
         validateReviewList(movie);
+
+        movieRepository.validateFavoriteMovieStatus(movie);
     }
 
     private void validateTrailerList(MovieEntity movie){
