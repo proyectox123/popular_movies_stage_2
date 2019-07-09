@@ -42,7 +42,7 @@ public class MovieDetailViewModel extends AndroidViewModel implements
     private List<Trailer> trailerList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
 
-    private LiveData<Boolean> isFavorite;
+    private LiveData<Boolean> isFavoriteData;
 
     private MutableLiveData<String> movieDetailPosterData = new MutableLiveData<>();
     private MutableLiveData<String> movieDetailTitleData = new MutableLiveData<>();
@@ -63,7 +63,7 @@ public class MovieDetailViewModel extends AndroidViewModel implements
 
         movieRepository = new MovieRepository(this.getApplication());
 
-        this.isFavorite = movieRepository.getIsFavorite();
+        this.isFavoriteData = movieRepository.getIsFavorite();
     }
 
     //endregion
@@ -133,8 +133,8 @@ public class MovieDetailViewModel extends AndroidViewModel implements
         return reviewListData;
     }
 
-    LiveData<Boolean> getIsFavorite() {
-        return isFavorite;
+    LiveData<Boolean> getIsFavoriteData() {
+        return isFavoriteData;
     }
 
     //endregion

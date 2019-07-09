@@ -207,7 +207,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 updateReviewList(reviewList);
             }
         });
-        movieDetailViewModel.getIsFavorite().observe(this, new Observer<Boolean>() {
+        movieDetailViewModel.getIsFavoriteData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean isFavorite) {
                 Log.d(TAG, "getIsFavorite onChanged isFavorite " + isFavorite);
