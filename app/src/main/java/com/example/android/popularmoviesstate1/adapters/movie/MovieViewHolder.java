@@ -11,11 +11,15 @@ import com.squareup.picasso.Picasso;
 
 public class MovieViewHolder extends BaseViewHolder<MovieEntity> {
 
+    //region Constants
+
+    private final MovieListAdapter.OnMovieListAdapterListener onMovieListAdapterListener;
+
+    //endregion
+
     //region Fields
 
     private final ImageView moviePosterImageView;
-
-    private MovieListAdapter.OnMovieListAdapterListener onMovieListAdapterListener;
 
     //endregion
 

@@ -1,6 +1,6 @@
 package com.example.android.popularmoviesstate1.features.moviedetail;
 
-public interface MovieDetailNavigator {
+interface MovieDetailNavigator {
     void validateMovieDetailExtraData();
     void closeOnError();
 }

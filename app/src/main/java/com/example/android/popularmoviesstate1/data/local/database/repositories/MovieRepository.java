@@ -11,12 +11,12 @@ import java.util.List;
 
 public class MovieRepository {
 
-    //region Fields
+    //region Constants
 
-    private AppDatabase database;
+    private final AppDatabase database;
 
-    private MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
-    private MutableLiveData<List<MovieEntity>> favoriteMovieListData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
+    private final MutableLiveData<List<MovieEntity>> favoriteMovieListData = new MutableLiveData<>();
 
     //endregion
 

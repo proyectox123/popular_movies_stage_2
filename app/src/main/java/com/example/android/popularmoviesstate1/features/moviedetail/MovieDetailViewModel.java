@@ -32,6 +32,18 @@ public class MovieDetailViewModel extends AndroidViewModel implements
 
     private final static String TAG = MovieDetailViewModel.class.getSimpleName();
 
+    private final LiveData<Boolean> isFavoriteData;
+
+    private final MutableLiveData<String> movieDetailPosterData = new MutableLiveData<>();
+    private final MutableLiveData<String> movieDetailTitleData = new MutableLiveData<>();
+    private final MutableLiveData<String> movieDetailReleaseDateData = new MutableLiveData<>();
+    private final MutableLiveData<String> movieDetailVoteAverageData = new MutableLiveData<>();
+    private final MutableLiveData<String> movieDetailPlotSynopsisData = new MutableLiveData<>();
+    private final MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
+    private final MutableLiveData<List<Review>> reviewListData = new MutableLiveData<>();
+
+    private final MovieRepository movieRepository;
+
     //endregion
 
     //region Fields
@@ -41,18 +53,6 @@ public class MovieDetailViewModel extends AndroidViewModel implements
     private MovieEntity movie;
     private List<Trailer> trailerList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
-
-    private LiveData<Boolean> isFavoriteData;
-
-    private MutableLiveData<String> movieDetailPosterData = new MutableLiveData<>();
-    private MutableLiveData<String> movieDetailTitleData = new MutableLiveData<>();
-    private MutableLiveData<String> movieDetailReleaseDateData = new MutableLiveData<>();
-    private MutableLiveData<String> movieDetailVoteAverageData = new MutableLiveData<>();
-    private MutableLiveData<String> movieDetailPlotSynopsisData = new MutableLiveData<>();
-    private MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
-    private MutableLiveData<List<Review>> reviewListData = new MutableLiveData<>();
-
-    private MovieRepository movieRepository;
 
     //endregion
 

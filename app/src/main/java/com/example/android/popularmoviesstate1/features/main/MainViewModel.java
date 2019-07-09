@@ -29,6 +29,12 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
 
     private final static String TAG = MainViewModel.class.getSimpleName();
 
+    private final LiveData<List<MovieEntity>> favoriteMovieListData;
+
+    private final MutableLiveData<List<MovieEntity>> movieListData = new MutableLiveData<>();
+
+    private final MovieRepository movieRepository;
+
     //endregion
 
     //region Fields
@@ -38,12 +44,6 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
     private List<MovieEntity> moviePopularList = new ArrayList<>();
     private List<MovieEntity> movieTopRatedList = new ArrayList<>();
     private List<MovieEntity> movieFavoriteList = new ArrayList<>();
-
-    private LiveData<List<MovieEntity>> favoriteMovieListData;
-
-    private MutableLiveData<List<MovieEntity>> movieListData = new MutableLiveData<>();
-
-    private MovieRepository movieRepository;
 
     private MainNavigator navigator;
 

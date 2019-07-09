@@ -8,7 +8,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
 
     //region Constructors
 
-    public BaseViewHolder(@NonNull View itemView) {
+    protected BaseViewHolder(@NonNull View itemView) {
         super(itemView);
     }
 

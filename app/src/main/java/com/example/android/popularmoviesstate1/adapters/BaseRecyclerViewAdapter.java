@@ -27,7 +27,7 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseViewHolder<T>>
 
     //region Abstract Methods
 
-    public abstract int getLayoutIdForListItem();
+    protected abstract int getLayoutIdForListItem();
 
     //endregion
 

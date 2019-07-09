@@ -22,7 +22,7 @@ public class ReviewRequest extends BaseMovieRequest {
 
     //region Constructors
 
-    public ReviewRequest(int movieId){
+    ReviewRequest(int movieId){
         this.movieId = movieId;
     }
 
