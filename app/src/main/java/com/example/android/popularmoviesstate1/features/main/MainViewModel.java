@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.popularmoviesstate1.R;
 import com.example.android.popularmoviesstate1.data.local.database.repositories.MovieRepository;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.requests.movie.MovieListTask;
@@ -95,7 +96,7 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
         return movieListData;
     }
 
-    public LiveData<List<MovieEntity>> getFavoriteMovieListData() {
+    LiveData<List<MovieEntity>> getFavoriteMovieListData() {
         return favoriteMovieListData;
     }
 
@@ -112,6 +113,8 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
             if(sortBySaved == null){
                 sortBySaved = MovieEnum.TOP_RATED;
             }
+
+            validateSortByCurrentAction(sortBySaved);
 
             List<MovieEntity> movieSavedList = null;
             switch (sortBySaved){
@@ -132,10 +135,32 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
         }
     }
 
+    private void validateSortByCurrentAction(MovieEnum sortBy){
+        int menuItemId;
+        switch (sortBy){
+            case FAVORITE:
+                menuItemId = R.id.menu_movie_favorites;
+                break;
+            case POPULAR:
+                menuItemId = R.id.menu_movie_most_popular;
+                break;
+            default:
+                menuItemId = R.id.menu_movie_highest_rated;
+                break;
+        }
+
+        navigator.updateMenuItemChecked(menuItemId);
+    }
+
+    void validateMenuItemSelected() {
+        validateSortByCurrentAction(sortBy);
+    }
+
     void initMovieList() {
         Log.d(TAG, "initMovieList sortBy " + sortBy);
         navigator.showProgressBar();
 
+        validateSortByCurrentAction(sortBy);
         if(sortBy == MovieEnum.FAVORITE){
             movieRepository.readFavoriteMovieList();
         }else{

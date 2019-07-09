@@ -7,7 +7,7 @@
         android:title="@string/menu_movie_sort_by"
         app:showAsAction="ifRoom">
         <menu>
-            <group>
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/menu_movie_favorites"
                     android:title="@string/menu_movie_favorites" />

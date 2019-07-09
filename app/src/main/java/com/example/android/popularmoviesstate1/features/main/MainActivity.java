@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
 
     //region Fields
 
+    private Menu menu;
+
     private ProgressBar movieListProgressBar;
     private RecyclerView movieListView;
     private SwipeRefreshLayout movieListSwipeRefresh;
@@ -89,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.movie, menu);
+
+        this.menu = menu;
+
+        mainViewModel.validateMenuItemSelected();
+
         return true;
     }
 
@@ -135,6 +142,15 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
         movieListProgressBar.setVisibility(View.VISIBLE);
         movieListView.setVisibility(View.GONE);
         noDataLabel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateMenuItemChecked(int menuItemId) {
+        if(menu == null){
+            return;
+        }
+
+        menu.findItem(menuItemId).setChecked(true);
     }
 
     //endregion

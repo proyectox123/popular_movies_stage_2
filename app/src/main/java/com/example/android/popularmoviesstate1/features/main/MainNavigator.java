@@ -4,4 +4,5 @@ public interface MainNavigator {
     void hideProgressBar();
     void showErrorMessage();
     void showProgressBar();
+    void updateMenuItemChecked(int menuItemId);
 }
