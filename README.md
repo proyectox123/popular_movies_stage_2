@@ -33,4 +33,9 @@ If somebody wants to use this project it's necessary to create an API KEY TheMov
 
 Example:
 
+##### Reviews
+
+* In the movies detail screen, a user can tap a button (for example, a star) to mark it as a Favorite. Tap the button on a favorite movie will unfavorite it.
+
+
 MOVIE_DB_API_KEY = "XXXX"

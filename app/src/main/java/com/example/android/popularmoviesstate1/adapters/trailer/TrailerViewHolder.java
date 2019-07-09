@@ -15,14 +15,14 @@ public class TrailerViewHolder extends BaseViewHolder<Trailer> {
 
     private final ImageView movieTrailerImageView;
 
-    private TrailerListAdapter.OnTrailerListAdapterListener onTrailerListAdapterListener;
+    private final TrailerListAdapter.OnTrailerListAdapterListener onTrailerListAdapterListener;
 
     //endregion
 
     //region Constructors
 
-    public TrailerViewHolder(@NonNull View itemView,
-                             TrailerListAdapter.OnTrailerListAdapterListener onTrailerListAdapterListener) {
+    TrailerViewHolder(@NonNull View itemView,
+                      TrailerListAdapter.OnTrailerListAdapterListener onTrailerListAdapterListener) {
         super(itemView);
 
         movieTrailerImageView = itemView.findViewById(R.id.movieTrailerImageView);

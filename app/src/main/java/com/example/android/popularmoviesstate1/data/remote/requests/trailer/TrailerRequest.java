@@ -16,13 +16,13 @@ public class TrailerRequest extends BaseMovieRequest {
 
     //region Fields
 
-    private int movieId;
+    private final int movieId;
 
     //endregion
 
     //region Constructors
 
-    public TrailerRequest(int movieId){
+    TrailerRequest(int movieId){
         this.movieId = movieId;
     }
 

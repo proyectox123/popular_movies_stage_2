@@ -16,7 +16,7 @@ public class ReviewRequest extends BaseMovieRequest {
 
     //region Fields
 
-    private int movieId;
+    private final int movieId;
 
     //endregion
 

@@ -16,7 +16,7 @@ public class ReviewViewHolder extends BaseViewHolder<Review> {
     private final TextView reviewContentTextView;
     private final View reviewContent;
 
-    private ReviewListAdapter.OnReviewListAdapterListener onReviewListAdapterListener;
+    private final ReviewListAdapter.OnReviewListAdapterListener onReviewListAdapterListener;
 
     //endregion
 

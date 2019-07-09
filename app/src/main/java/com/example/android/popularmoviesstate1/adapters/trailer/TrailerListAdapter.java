@@ -11,7 +11,7 @@ public class TrailerListAdapter extends BaseRecyclerViewAdapter<Trailer, Trailer
 
     //region Fields
 
-    private OnTrailerListAdapterListener onTrailerListAdapterListener;
+    private final OnTrailerListAdapterListener onTrailerListAdapterListener;
 
     //endregion
 
