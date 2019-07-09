@@ -18,9 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.popularmoviesstate1.R;
-import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.adapters.movie.MovieListAdapter;
-import com.example.android.popularmoviesstate1.enums.MovieEnum;
+import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.features.moviedetail.MovieDetailActivity;
 
 import java.util.List;
@@ -176,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements MainNavigator,
         mainViewModel.getFavoriteMovieListData().observe(this, new Observer<List<MovieEntity>>() {
             @Override
             public void onChanged(@Nullable List<MovieEntity> movieEntityList) {
-                mainViewModel.updateMovieList(MovieEnum.FAVORITE, movieEntityList);
+                mainViewModel.updateFavoriteMovieList(movieEntityList);
             }
         });
     }

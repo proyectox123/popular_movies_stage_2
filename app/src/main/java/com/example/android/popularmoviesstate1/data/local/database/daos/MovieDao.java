@@ -1,5 +1,6 @@
 package com.example.android.popularmoviesstate1.data.local.database.daos;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -23,7 +24,7 @@ public interface MovieDao {
     //region Read
 
     @Query("SELECT * FROM movie")
-    List<MovieEntity> loadAllMovies();
+    LiveData<List<MovieEntity>> loadAllMovies();
 
     @Query("SELECT * FROM movie where movie_id = :movieId")
     MovieEntity loadMovieById(int movieId);

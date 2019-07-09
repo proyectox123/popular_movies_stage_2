@@ -6,9 +6,6 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.android.popularmoviesstate1.data.local.database.AppDatabase;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MovieRepository {
 
     //region Constants
@@ -16,7 +13,6 @@ public class MovieRepository {
     private final AppDatabase database;
 
     private final MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
-    private final MutableLiveData<List<MovieEntity>> favoriteMovieListData = new MutableLiveData<>();
 
     //endregion
 
@@ -32,10 +28,6 @@ public class MovieRepository {
 
     public MutableLiveData<Boolean> getIsFavorite() {
         return isFavorite;
-    }
-
-    public MutableLiveData<List<MovieEntity>> getFavoriteMovieListData() {
-        return favoriteMovieListData;
     }
 
     public void validateFavoriteMovieStatus(MovieEntity movieEntity){
@@ -60,15 +52,6 @@ public class MovieRepository {
             database.movieDao().deleteMovie(movieEntity);
             isFavorite.setValue(false);
         }
-    }
-
-    public void readFavoriteMovieList() {
-        List<MovieEntity> favoriteMovieList = database.movieDao().loadAllMovies();
-        if(favoriteMovieList == null){
-            favoriteMovieList = new ArrayList<>();
-        }
-
-        favoriteMovieListData.setValue(favoriteMovieList);
     }
 
     //endregion
