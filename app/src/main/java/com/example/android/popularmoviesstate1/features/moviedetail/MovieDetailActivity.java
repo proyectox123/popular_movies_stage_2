@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.example.android.popularmoviesstate1.R;
 import com.example.android.popularmoviesstate1.adapters.review.ReviewListAdapter;
 import com.example.android.popularmoviesstate1.adapters.trailer.TrailerListAdapter;
-import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.models.Review;
 import com.example.android.popularmoviesstate1.data.remote.models.Trailer;
 import com.squareup.picasso.Picasso;
@@ -166,10 +165,34 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         movieDetailViewModel = ViewModelProviders.of(this).get(MovieDetailViewModel.class);
         movieDetailViewModel.setNavigator(this);
 
-        movieDetailViewModel.getMovieData().observe(this, new Observer<MovieEntity>() {
+        movieDetailViewModel.getMovieDetailPosterData().observe(this, new Observer<String>() {
             @Override
-            public void onChanged(@Nullable MovieEntity movie) {
-                validateMovieDate(movie);
+            public void onChanged(@Nullable String poster) {
+                loadMovieDetailPoster(poster);
+            }
+        });
+        movieDetailViewModel.getMovieDetailTitleData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String title) {
+                loadMovieDetailTitle(title);
+            }
+        });
+        movieDetailViewModel.getMovieDetailReleaseDateData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String releaseDate) {
+                loadMovieDetailReleaseDate(releaseDate);
+            }
+        });
+        movieDetailViewModel.getMovieDetailVoteAverageData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String voteAverage) {
+                loadMovieDetailVoteAverage(voteAverage);
+            }
+        });
+        movieDetailViewModel.getMovieDetailPlotSynopsisData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String plotSynopsis) {
+                loadMovieDetailDescription(plotSynopsis);
             }
         });
         movieDetailViewModel.getTrailerListData().observe(this, new Observer<List<Trailer>>() {
@@ -192,19 +215,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 updateFavoriteMenuItem();
             }
         });
-    }
-
-    private void validateMovieDate(MovieEntity movie){
-        Log.d(TAG, "validateMovieDate");
-        if(movie == null){
-            return;
-        }
-
-        loadMovieDetailPoster(movie.getPosterPath());
-        loadMovieDetailTitle(movie.getTitle());
-        loadMovieDetailReleaseDate(movie.getReleaseDateLabel());
-        loadMovieDetailVoteAverage(movie.getVoteAverageLabel(this));
-        loadMovieDetailDescription(movie.getPlotSynopsis());
     }
 
     private void loadMovieDetailPoster(String posterPath) {

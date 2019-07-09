@@ -44,7 +44,11 @@ public class MovieDetailViewModel extends AndroidViewModel implements
 
     private LiveData<Boolean> isFavorite;
 
-    private MutableLiveData<MovieEntity> movieData = new MutableLiveData<>();
+    private MutableLiveData<String> movieDetailPosterData = new MutableLiveData<>();
+    private MutableLiveData<String> movieDetailTitleData = new MutableLiveData<>();
+    private MutableLiveData<String> movieDetailReleaseDateData = new MutableLiveData<>();
+    private MutableLiveData<String> movieDetailVoteAverageData = new MutableLiveData<>();
+    private MutableLiveData<String> movieDetailPlotSynopsisData = new MutableLiveData<>();
     private MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
     private MutableLiveData<List<Review>> reviewListData = new MutableLiveData<>();
 
@@ -100,8 +104,25 @@ public class MovieDetailViewModel extends AndroidViewModel implements
 
     //region LiveData Private Getters
 
-    MutableLiveData<MovieEntity> getMovieData() {
-        return movieData;
+
+    MutableLiveData<String> getMovieDetailPosterData() {
+        return movieDetailPosterData;
+    }
+
+    MutableLiveData<String> getMovieDetailTitleData() {
+        return movieDetailTitleData;
+    }
+
+    MutableLiveData<String> getMovieDetailReleaseDateData() {
+        return movieDetailReleaseDateData;
+    }
+
+    MutableLiveData<String> getMovieDetailVoteAverageData() {
+        return movieDetailVoteAverageData;
+    }
+
+    MutableLiveData<String> getMovieDetailPlotSynopsisData() {
+        return movieDetailPlotSynopsisData;
     }
 
     MutableLiveData<List<Trailer>> getTrailerListData() {
@@ -179,12 +200,25 @@ public class MovieDetailViewModel extends AndroidViewModel implements
         Log.d(TAG, "validateMovieDetailData movie " + movie.toString());
         this.movie = movie;
 
-        movieData.setValue(movie);
-
+        validateMovieData(movie);
         validateTrailerList(movie);
         validateReviewList(movie);
 
         movieRepository.validateFavoriteMovieStatus(movie);
+    }
+
+    //TODO We can use data binding in order to inflate the movie detail view
+    private void validateMovieData(MovieEntity movie){
+        Log.d(TAG, "validateMovieData");
+        if(movie == null){
+            return;
+        }
+
+        movieDetailPosterData.setValue(movie.getPosterPath());
+        movieDetailTitleData.setValue(movie.getTitle());
+        movieDetailReleaseDateData.setValue(movie.getReleaseDateLabel());
+        movieDetailVoteAverageData.setValue(movie.getVoteAverageLabel(getApplication()));
+        movieDetailPlotSynopsisData.setValue(movie.getPlotSynopsis());
     }
 
     private void validateTrailerList(MovieEntity movie){
