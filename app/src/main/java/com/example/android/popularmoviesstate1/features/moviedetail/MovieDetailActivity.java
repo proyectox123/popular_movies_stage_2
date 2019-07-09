@@ -83,7 +83,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         reviewListView.setLayoutManager(new LinearLayoutManager(this));
         reviewListView.setAdapter(reviewListAdapter);
 
-        initData();
+        initData(savedInstanceState);
     }
 
     @Override
@@ -94,6 +94,17 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        movieDetailViewModel.saveInstanceState(outState);
+    }
+
+    @Override
+    public void validateMovieDetailExtraData() {
+        movieDetailViewModel.validateMovieDetailExtraData(getIntent());
     }
 
     @Override
@@ -122,10 +133,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     //region Private Methods
 
-    private void initData(){
+    private void initData(Bundle savedInstanceState){
         initViewModel();
 
-        movieDetailViewModel.validateMovieDetailExtraData(getIntent());
+        movieDetailViewModel.validateInstanceState(savedInstanceState);
     }
 
     private void initViewModel(){

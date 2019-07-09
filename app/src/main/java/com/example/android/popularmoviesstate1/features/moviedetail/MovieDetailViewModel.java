@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,6 +17,9 @@ import com.example.android.popularmoviesstate1.data.remote.requests.trailer.Trai
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.popularmoviesstate1.utils.Constants.BUNDLE_MOVIE;
+import static com.example.android.popularmoviesstate1.utils.Constants.BUNDLE_REVIEW_LIST;
+import static com.example.android.popularmoviesstate1.utils.Constants.BUNDLE_TRAILER_LIST;
 import static com.example.android.popularmoviesstate1.utils.Constants.EXTRA_MOVIE;
 
 public class MovieDetailViewModel extends AndroidViewModel implements
@@ -31,6 +35,10 @@ public class MovieDetailViewModel extends AndroidViewModel implements
     //region Fields
 
     private MovieDetailNavigator navigator;
+
+    private MovieEntity movie;
+    private List<Trailer> trailerList = new ArrayList<>();
+    private List<Review> reviewList = new ArrayList<>();
 
     private MutableLiveData<MovieEntity> movieData = new MutableLiveData<>();
     private MutableLiveData<List<Trailer>> trailerListData = new MutableLiveData<>();
@@ -49,23 +57,31 @@ public class MovieDetailViewModel extends AndroidViewModel implements
     //region Override Methods & Callbacks
 
     @Override
-    public void updateTrailerList(List<Trailer> movieList) {
-        trailerListData.setValue(movieList);
+    public void updateTrailerList(List<Trailer> trailerList) {
+        this.trailerList = trailerList;
+
+        trailerListData.setValue(this.trailerList);
     }
 
     @Override
     public void showTrailerListError() {
-        trailerListData.setValue(new ArrayList<Trailer>());
+        this.trailerList = new ArrayList<>();
+
+        trailerListData.setValue(this.trailerList);
     }
 
     @Override
     public void updateReviewList(List<Review> reviewList) {
-        reviewListData.setValue(reviewList);
+        this.reviewList = reviewList;
+
+        reviewListData.setValue(this.reviewList);
     }
 
     @Override
     public void showReviewListError() {
-        reviewListData.setValue(new ArrayList<Review>());
+        this.reviewList = new ArrayList<>();
+
+        reviewListData.setValue(this.reviewList);
     }
 
     //endregion
@@ -110,11 +126,64 @@ public class MovieDetailViewModel extends AndroidViewModel implements
         validateMovieDetailData(movie);
     }
 
+    void validateInstanceState(Bundle savedInstanceState) {
+        Log.d(TAG, "validateInstanceState");
+        if (savedInstanceState != null) {
+            trailerList = savedInstanceState.getParcelableArrayList(BUNDLE_TRAILER_LIST);
+            reviewList = savedInstanceState.getParcelableArrayList(BUNDLE_REVIEW_LIST);
+            movie = savedInstanceState.getParcelable(BUNDLE_MOVIE);
+
+            if(movie != null){
+                validateMovieDetailData(movie);
+            }else{
+                navigator.closeOnError();
+            }
+        }else{
+            navigator.validateMovieDetailExtraData();
+        }
+    }
+
+    void saveInstanceState(Bundle outState) {
+        if(trailerList != null){
+            outState.putParcelableArrayList(BUNDLE_TRAILER_LIST, new ArrayList<>(trailerList));
+        }
+
+        if(reviewList != null){
+            outState.putParcelableArrayList(BUNDLE_REVIEW_LIST, new ArrayList<>(reviewList));
+        }
+
+        if(movie != null){
+            outState.putParcelable(BUNDLE_MOVIE, movie);
+        }
+    }
+
     private void validateMovieDetailData(MovieEntity movie){
         Log.d(TAG, "validateMovieDetailData movie " + movie.toString());
+        this.movie = movie;
+
         movieData.setValue(movie);
 
+        validateTrailerList(movie);
+        validateReviewList(movie);
+    }
+
+    private void validateTrailerList(MovieEntity movie){
+        Log.d(TAG, "validateTrailerList movie " + movie.toString());
+        if(trailerList != null && trailerList.size() > 0){
+            updateTrailerList(trailerList);
+            return;
+        }
+
         new TrailerListTask(this).execute(movie.getId());
+    }
+
+    private void validateReviewList(MovieEntity movie){
+        Log.d(TAG, "validateReviewList movie " + movie.toString());
+        if(reviewList != null && reviewList.size() > 0){
+            updateReviewList(reviewList);
+            return;
+        }
+
         new ReviewListTask(this).execute(movie.getId());
     }
 
