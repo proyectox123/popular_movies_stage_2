@@ -6,18 +6,36 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.android.popularmoviesstate1.data.local.database.AppDatabase;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MovieRepository {
+
+    //region Fields
 
     private AppDatabase database;
 
     private MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
+    private MutableLiveData<List<MovieEntity>> favoriteMovieListData = new MutableLiveData<>();
+
+    //endregion
+
+    //region Constructors
 
     public MovieRepository(Application application){
         database = AppDatabase.getInstance(application);
     }
 
+    //endregion
+
+    //region Public Methods
+
     public MutableLiveData<Boolean> getIsFavorite() {
         return isFavorite;
+    }
+
+    public MutableLiveData<List<MovieEntity>> getFavoriteMovieListData() {
+        return favoriteMovieListData;
     }
 
     public void validateFavoriteMovieStatus(MovieEntity movieEntity){
@@ -43,4 +61,15 @@ public class MovieRepository {
             isFavorite.setValue(false);
         }
     }
+
+    public void readFavoriteMovieList() {
+        List<MovieEntity> favoriteMovieList = database.movieDao().loadAllMovies();
+        if(favoriteMovieList == null){
+            favoriteMovieList = new ArrayList<>();
+        }
+
+        favoriteMovieListData.setValue(favoriteMovieList);
+    }
+
+    //endregion
 }

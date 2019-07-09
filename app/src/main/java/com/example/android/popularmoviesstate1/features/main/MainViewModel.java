@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.popularmoviesstate1.data.local.database.repositories.MovieRepository;
 import com.example.android.popularmoviesstate1.data.local.database.tables.MovieEntity;
 import com.example.android.popularmoviesstate1.data.remote.requests.movie.MovieListTask;
 import com.example.android.popularmoviesstate1.enums.MovieEnum;
@@ -37,7 +38,11 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
     private List<MovieEntity> movieTopRatedList = new ArrayList<>();
     private List<MovieEntity> movieFavoriteList = new ArrayList<>();
 
+    private LiveData<List<MovieEntity>> favoriteMovieListData;
+
     private MutableLiveData<List<MovieEntity>> movieListData = new MutableLiveData<>();
+
+    private MovieRepository movieRepository;
 
     private MainNavigator navigator;
 
@@ -47,6 +52,10 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
 
     public MainViewModel(@NonNull Application application) {
         super(application);
+
+        movieRepository = new MovieRepository(this.getApplication());
+
+        this.favoriteMovieListData = movieRepository.getFavoriteMovieListData();
     }
 
     //endregion
@@ -62,6 +71,9 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
                 break;
             case POPULAR:
                 moviePopularList = movieList;
+                break;
+            case FAVORITE:
+                movieFavoriteList = movieList;
                 break;
         }
 
@@ -81,6 +93,10 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
 
     LiveData<List<MovieEntity>> getMovieList() {
         return movieListData;
+    }
+
+    public LiveData<List<MovieEntity>> getFavoriteMovieListData() {
+        return favoriteMovieListData;
     }
 
     //endregion
@@ -120,7 +136,11 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
         Log.d(TAG, "initMovieList sortBy " + sortBy);
         navigator.showProgressBar();
 
-        new MovieListTask(this).execute(sortBy);
+        if(sortBy == MovieEnum.FAVORITE){
+            movieRepository.readFavoriteMovieList();
+        }else{
+            new MovieListTask(this).execute(sortBy);
+        }
     }
 
     void selectMovieMostPopularOption(){
@@ -130,6 +150,11 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
 
     void selectMovieHighestRatedOption(){
         sortBy = MovieEnum.TOP_RATED;
+        initMovieList();
+    }
+
+    void selectMovieFavoriteOption(){
+        sortBy = MovieEnum.FAVORITE;
         initMovieList();
     }
 
@@ -151,11 +176,11 @@ public class MainViewModel extends AndroidViewModel implements MovieListTask.OnM
 
     private void validateSavedMovieList(@Nullable List<MovieEntity> movieSavedList){
         Log.d(TAG, "validateSavedMovieList");
+        Log.d(TAG, "validateSavedMovieList sortBy " + sortBy);
         if(movieSavedList != null){
             List<MovieEntity> movieList = new ArrayList<>(movieSavedList);
             if(movieList.size() > 0){
                 Log.d(TAG, "validateSavedMovieList update liveData");
-                Log.d(TAG, "validateSavedMovieList sortBy " + sortBy);
                 movieListData.setValue(movieList);
                 return;
             }

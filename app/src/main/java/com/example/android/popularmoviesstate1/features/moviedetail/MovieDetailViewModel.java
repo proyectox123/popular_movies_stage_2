@@ -61,7 +61,7 @@ public class MovieDetailViewModel extends AndroidViewModel implements
     public MovieDetailViewModel(@NonNull Application application) {
         super(application);
 
-        movieRepository = new MovieRepository(application);
+        movieRepository = new MovieRepository(this.getApplication());
 
         this.isFavorite = movieRepository.getIsFavorite();
     }
